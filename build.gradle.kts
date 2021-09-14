@@ -51,9 +51,9 @@ val orxFeatures = setOf(
 //  "orx-shapes",
 //  "orx-syphon",
 //  "orx-temporal-blur",
-//  "orx-tensorflow",    
+  "orx-tensorflow",
 //  "orx-time-operators",
-//  "orx-timer",
+  "orx-timer",
 //  "orx-triangulation",
 //  "orx-video-profiles",
     null
@@ -66,9 +66,9 @@ val ormlFeatures = setOf<String>(
 //    "orml-image-classifier",
 //    "orml-psenet",
 //    "orml-ssd",
-//    "orml-style-transfer",
+    "orml-style-transfer",
 //    "orml-super-resolution",
-//    "orml-u2net"
+    "orml-u2net"
 )
 
 
@@ -78,17 +78,17 @@ val openrndrFeatures = setOf(
 )
 
 /*  Which version of OPENRNDR and ORX should be used? */
-val openrndrUseSnapshot = false
-val openrndrVersion = if (openrndrUseSnapshot) "0.4.0-SNAPSHOT" else "0.3.58"
+val openrndrUseSnapshot = true
+val openrndrVersion = if (openrndrUseSnapshot) "0.5.1-SNAPSHOT" else "0.3.58"
 
-val orxUseSnapshot = false
-val orxVersion = if (orxUseSnapshot) "0.4.0-SNAPSHOT" else "0.3.58"
+val orxUseSnapshot = true
+val orxVersion = if (orxUseSnapshot) "0.5.1-SNAPSHOT" else "0.3.58"
 
-val ormlUseSnapshot = false
-val ormlVersion = if (ormlUseSnapshot) "0.4.0-SNAPSHOT" else "0.3.0-rc.5"
+val ormlUseSnapshot = true
+val ormlVersion = if (ormlUseSnapshot) "0.5.1-SNAPSHOT" else "0.3.0-rc.5"
 
 // choices are "orx-tensorflow-gpu", "orx-tensorflow-mkl", "orx-tensorflow"
-val orxTensorflowBackend = "orx-tensorflow-mkl"
+val orxTensorflowBackend = "orx-tensorflow"
 
 //<editor-fold desc="This is code for OPENRNDR, no need to edit this .. most of the times">
 val supportedPlatforms = setOf("windows", "macos", "linux-x64", "linux-arm64")
@@ -222,12 +222,12 @@ dependencies {
 
 // --------------------------------------------------------------------------------------------------------------------
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
+//configure<JavaPluginConvention> {
+//    sourceCompatibility = JavaVersion.VERSION_1_8
+//}
+//tasks.withType<KotlinCompile> {
+//    kotlinOptions.jvmTarget = "1.8"
+//}
 
 
 project.setProperty("mainClassName", applicationMainClass)
