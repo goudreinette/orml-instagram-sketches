@@ -24,18 +24,19 @@ import kotlin.math.PI
 import kotlin.math.cos
 
 
-data class Anim(var x: Double = 0.0, var opacity: Double = 0.0) : Animatable()
-
-data class Fruit(
-    val sourceImage: ColorBuffer,
-    val resultImage: ColorBuffer,
-    val rect: Rectangle,
-    var anim: Anim
-)
 
 
 
 fun main() {
+    data class Anim(var x: Double = 0.0, var opacity: Double = 0.0) : Animatable()
+
+    data class Fruit(
+        val sourceImage: ColorBuffer,
+        val resultImage: ColorBuffer,
+        val rect: Rectangle,
+        var anim: Anim
+    )
+
     application {
         configure {
             width = 800
@@ -111,7 +112,8 @@ fun main() {
                     val source = Rectangle(x,0.0, it.resultImage.width.toDouble() - x, it.resultImage.height*1.0)
                     val target = Rectangle(it.rect.x + x,it.rect.y, it.resultImage.width.toDouble() - x, it.resultImage.height*1.0)
 
-
+                    drawer.translate(it.rect.corner)
+                    drawer.scale(it.anim.opacity)
                     drawer.drawStyle.colorMatrix = tint(ColorRGBa.WHITE.opacify(it.anim.opacity - 0.2))
                     drawer.image(it.sourceImage, source, target)
 
