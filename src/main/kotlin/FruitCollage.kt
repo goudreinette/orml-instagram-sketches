@@ -1,8 +1,11 @@
 import org.openrndr.animatable.Animatable
+import org.openrndr.animatable.easing.Easing
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.ColorBuffer
+import org.openrndr.draw.grayscale
 import org.openrndr.draw.loadImage
+import org.openrndr.draw.tint
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.compositor.compose
 import org.openrndr.extra.compositor.layer
@@ -21,7 +24,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 
 
-data class Anim(var x: Double = 0.0) : Animatable()
+data class Anim(var x: Double = 0.0, var opacity: Double = 0.0) : Animatable()
 
 data class Fruit(
     val sourceImage: ColorBuffer,
@@ -63,7 +66,8 @@ fun main() {
 
                 val anim = Anim()
 
-                anim.animate(anim::x, 1.0, 1000);
+                anim.animate(anim::x, 1.0, 2000, Easing.CubicOut, 500);
+                anim.animate(anim::opacity, 1.0, 500, Easing.CubicOut);
 
                 fruits.add(Fruit(
                     sourceImage = image,
@@ -102,15 +106,17 @@ fun main() {
                 fruits.forEach {
                     it.anim.updateAnimation()
 
-                    val x = easeCubicOut(it.anim.x) * it.resultImage.width
+                    val x = it.anim.x * it.resultImage.width
 
                     val source = Rectangle(x,0.0, it.resultImage.width.toDouble() - x, it.resultImage.height*1.0)
                     val target = Rectangle(it.rect.x + x,it.rect.y, it.resultImage.width.toDouble() - x, it.resultImage.height*1.0)
 
 
+                    drawer.drawStyle.colorMatrix = tint(ColorRGBa.WHITE.opacify(it.anim.opacity - 0.2))
                     drawer.image(it.sourceImage, source, target)
 
 
+                    drawer.drawStyle.colorMatrix = tint(ColorRGBa.WHITE.opacify(it.anim.opacity))
                     drawer.image(it.resultImage, it.rect.corner)
 
 
