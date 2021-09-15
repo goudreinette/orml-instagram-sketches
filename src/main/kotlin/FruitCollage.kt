@@ -6,6 +6,7 @@ import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.compositor.compose
 import org.openrndr.extra.compositor.layer
 import org.openrndr.extra.compositor.post
+import org.openrndr.extra.fx.color.ColorCorrection
 import org.openrndr.extra.fx.patterns.Checkers
 import org.openrndr.extra.gui.GUI
 import org.openrndr.extra.noise.random
@@ -14,6 +15,7 @@ import org.openrndr.extra.timeoperators.TimeOperators
 import org.openrndr.orml.u2net.U2Net
 import org.openrndr.shape.Rectangle
 import org.openrndr.extra.timer.repeat
+import org.openrndr.extras.easing.*
 import kotlin.math.PI
 import kotlin.math.cos
 
@@ -35,18 +37,21 @@ fun main() {
 
         program {
             val u2 = U2Net.load()
+//            val filter = ColorCorrection()
 
             val images = listOf<String>(
                 "data/images/cheeta.jpg",
                 "data/images/apple.jpg",
                 "data/images/ananas.jpg"
-            )
+            ).map {
+                loadImage(it)
+            }
 
             val fruits = mutableListOf<Fruit>()
 
 
-            repeat(5.0) {
-                val image = loadImage(images.random())
+            repeat(2.0) {
+                val image = images.random()
                 val result = u2.removeBackground(image)
 
                 val x = random(- (width.toDouble() / 2.0), width.toDouble() / 2.0)
@@ -87,7 +92,7 @@ fun main() {
                 drawer.fill = ColorRGBa.TRANSPARENT
 
                 fruits.forEach {
-                    val x = it.anim * it.resultImage.width
+                    val x = easeCubicOut(it.anim) * it.resultImage.width
 
                     val source = Rectangle(x,0.0, it.resultImage.width.toDouble() - x, it.resultImage.height*1.0)
                     val target = Rectangle(it.rect.x + x,it.rect.y, it.resultImage.width.toDouble() - x, it.resultImage.height*1.0)
@@ -97,12 +102,19 @@ fun main() {
 
 
                     drawer.image(it.resultImage, it.rect.corner)
-                    drawer.rectangle(target)
-                    drawer.rectangle(it.rect)
+
+
+                    // IDEA can also use easing functions here
+                    drawer.strokeWeight = 3.0
+                    drawer.stroke = ColorRGBa.PINK.opacify(1 - easeCubicIn(it.anim))
+                    if (it.anim < 1) {
+                        drawer.rectangle(target)
+                        drawer.rectangle(it.rect)
+                    }
 
 
                     if (it.anim < 1) {
-                        it.anim += .005
+                        it.anim += .01
                     }
                 }
             }
