@@ -1,3 +1,4 @@
+import org.openrndr.animatable.Animatable
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.ColorBuffer
@@ -19,11 +20,14 @@ import org.openrndr.extras.easing.*
 import kotlin.math.PI
 import kotlin.math.cos
 
+
+data class Anim(var x: Double = 0.0) : Animatable()
+
 data class Fruit(
     val sourceImage: ColorBuffer,
     val resultImage: ColorBuffer,
     val rect: Rectangle,
-    var anim: Double
+    var anim: Anim
 )
 
 
@@ -57,11 +61,15 @@ fun main() {
                 val x = random(- (width.toDouble() / 2.0), width.toDouble() / 2.0)
                 val y = random(- (height.toDouble() / 2.0), height.toDouble() / 2.0)
 
+                val anim = Anim()
+
+                anim.animate(anim::x, 1.0, 1000);
+
                 fruits.add(Fruit(
                     sourceImage = image,
                     resultImage = result,
                     rect = Rectangle(x, y, result.width.toDouble(), result.height.toDouble()),
-                    anim = 0.0
+                    anim = anim
                 ))
             }
 
@@ -92,7 +100,9 @@ fun main() {
                 drawer.fill = ColorRGBa.TRANSPARENT
 
                 fruits.forEach {
-                    val x = easeCubicOut(it.anim) * it.resultImage.width
+                    it.anim.updateAnimation()
+
+                    val x = easeCubicOut(it.anim.x) * it.resultImage.width
 
                     val source = Rectangle(x,0.0, it.resultImage.width.toDouble() - x, it.resultImage.height*1.0)
                     val target = Rectangle(it.rect.x + x,it.rect.y, it.resultImage.width.toDouble() - x, it.resultImage.height*1.0)
@@ -106,15 +116,10 @@ fun main() {
 
                     // IDEA can also use easing functions here
                     drawer.strokeWeight = 3.0
-                    drawer.stroke = ColorRGBa.PINK.opacify(1 - easeCubicIn(it.anim))
-                    if (it.anim < 1) {
+                    drawer.stroke = ColorRGBa.PINK.opacify(1 - easeCubicIn(it.anim.x))
+                    if (it.anim.x < 1) {
                         drawer.rectangle(target)
                         drawer.rectangle(it.rect)
-                    }
-
-
-                    if (it.anim < 1) {
-                        it.anim += .01
                     }
                 }
             }
