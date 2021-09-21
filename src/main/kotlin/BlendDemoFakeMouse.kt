@@ -5,6 +5,7 @@ import org.openrndr.extras.imageFit.imageFit
 import org.openrndr.ffmpeg.ScreenRecorder
 import org.openrndr.orml.styletransfer.StyleEncoder
 import org.openrndr.orml.styletransfer.StyleTransformer
+import kotlin.math.sin
 
 
 fun main() = application {
@@ -22,8 +23,9 @@ fun main() = application {
         extend(ScreenRecorder())
 
         extend {
-            val x = simplex(0,  .95 * seconds) * .8 * width + width/2
-            val y = simplex(1000, .1*  seconds) * .005 * height + height/2
+            val factor = 30
+            val x = simplex(0,  .95 * sin(seconds / factor) * factor) * .8 * width + width/2
+            val y = simplex(1000, .1*  sin(seconds / factor) * factor) * .005 * height + height/2
 
             val f = (x/width).toFloat()
             val styleVector = (styleVector0 zip styleVector1).map {
@@ -31,6 +33,8 @@ fun main() = application {
             }.toFloatArray()
 
             val transformed = transformer.transformStyle(contentImage, styleVector)
+
+            
             drawer.image(transformed)
 
 
