@@ -36,8 +36,8 @@ fun main() = application {
                 videoPlayer.draw(drawer)
             }
 
-            val transformed  = transformer.transformStyle(target.colorBuffer(0), styleVector)
-            drawer.imageFit(transformed, 0.0,0.0, width.toDouble(), height.toDouble())
+//            val transformed  = transformer.transformStyle(target.colorBuffer(0), styleVector)
+            drawer.imageFit(target.colorBuffer(0), 0.0,0.0, width.toDouble(), height.toDouble())
         }
     }
 }
