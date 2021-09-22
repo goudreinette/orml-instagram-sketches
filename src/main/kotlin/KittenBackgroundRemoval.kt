@@ -10,6 +10,7 @@ import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.compositor.compose
 import org.openrndr.extra.compositor.layer
 import org.openrndr.extra.compositor.post
+import org.openrndr.extra.fx.blur.BoxBlur
 import org.openrndr.extra.fx.color.ColorCorrection
 import org.openrndr.extra.fx.patterns.Checkers
 import org.openrndr.extra.gui.GUI
@@ -44,8 +45,8 @@ fun main() {
 
     application {
         configure {
-            width = 800
-            height = 800
+            width = 400
+            height = 400
         }
 
 
@@ -65,9 +66,12 @@ fun main() {
 
             val fruits = mutableListOf<Fruit>()
 
+            var i = 0
 
             repeat(2.0) {
-                val image = images.random()
+                val image = images[i % images.size]
+
+                i++
 
                 val anim = Anim()
 
@@ -122,9 +126,12 @@ fun main() {
             }
 
 
-            extend(ScreenRecorder().apply {
-                frameRate = 60
-            })
+//            extend(ScreenRecorder().apply {
+//                frameRate = 60
+//            })
+
+            val blurred = colorBuffer(width, height)
+            val blur = BoxBlur()
 
             extend {
                 checkers.size = settings.scale
@@ -143,7 +150,9 @@ fun main() {
 //                    drawer.scale(it.anim.opacity)
                     drawer.drawStyle.colorMatrix = tint(ColorRGBa.WHITE.opacify(it.anim.opacity))
                     drawer.image(it.sourceImage, source, target)
-
+//
+                    blur.apply(it.resultImage, blurred)
+                    drawer.image(blurred)
 
                     drawer.drawStyle.colorMatrix = tint(ColorRGBa.WHITE.opacify(it.anim.opacity))
                     drawer.image(it.resultImage, it.rect.corner)

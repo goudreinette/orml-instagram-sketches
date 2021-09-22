@@ -5,7 +5,7 @@ import org.openrndr.ffmpeg.VideoPlayerFFMPEG
 
 fun main() = application {
     program {
-        val videoPlayer = VideoPlayerFFMPEG.fromDevice("c922 Pro Stream Webcam")
+        val videoPlayer = VideoPlayerFFMPEG.fromDevice()
 
         print(VideoPlayerFFMPEG.defaultDevice())
         print(VideoPlayerFFMPEG.listDeviceNames())
