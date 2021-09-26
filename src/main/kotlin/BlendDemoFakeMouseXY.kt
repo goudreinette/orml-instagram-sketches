@@ -38,7 +38,6 @@ fun main() = application {
         }
 
 
-
         val styleImage0 = loadImage("data/images/style-003.jpg")
         val styleImage1 = loadImage("data/images/style-001.jpg")
 
@@ -53,6 +52,9 @@ fun main() = application {
         })
 
 
+        /**
+         * The 4 steps / directions
+         */
         anim.apply {
             animate(::x, width.toDouble() - 50, 2000, Easing.CubicOut, 0);
 
@@ -66,13 +68,12 @@ fun main() = application {
         extend {
             anim.updateAnimation()
 
-            print(anim.x)
-
             val x = anim.x // simplex(0,  .95 * seconds) * .8 * width + width/2
             val y = anim.y // simplex(1000, .5*  seconds) * .8 * height + height/2
 
             val f = (x/width).toFloat()
             val yy = (y / height)
+
 
             val styleVector = (styleVector0 zip styleVector1).map {
                 it.first * f + it.second * (1.0f-f)
@@ -80,15 +81,19 @@ fun main() = application {
 
             val transformed = transformer.transformStyle(contentImageFitted.colorBuffer(0), styleVector)
 
-            drawer.drawStyle.colorMatrix = tint(ColorRGBa.WHITE)
-            drawer.image(contentImageFitted.colorBuffer(0))
 
-            drawer.drawStyle.colorMatrix = tint(ColorRGBa.WHITE.opacify(yy))
-            drawer.image(transformed)
+            drawer.apply {
+                drawStyle.colorMatrix = tint(ColorRGBa.WHITE)
+                image(contentImageFitted.colorBuffer(0))
 
-            // Cursor
-            drawer.drawStyle.colorMatrix = tint(ColorRGBa.WHITE)
-            drawer.imageFit(cursor, x, y, 30.0, 30.0, 0.0, 0.0, FitMethod.Contain)
+                drawStyle.colorMatrix = tint(ColorRGBa.WHITE.opacify(yy))
+                image(transformed)
+
+
+                // Cursor
+                drawStyle.colorMatrix = tint(ColorRGBa.WHITE)
+                imageFit(cursor, x, y, 30.0, 30.0, 0.0, 0.0, FitMethod.Contain)
+            }
         }
     }
 }
