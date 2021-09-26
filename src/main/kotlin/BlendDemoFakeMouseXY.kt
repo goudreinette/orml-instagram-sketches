@@ -56,13 +56,17 @@ fun main() = application {
          * The 4 steps / directions
          */
         anim.apply {
-            animate(::x, width.toDouble() - 50, 2000, Easing.CubicOut, 0);
+            animate(::x, width.toDouble() - 50, 2000, Easing.CubicOut);
+            ::x.complete()
 
-            animate(::y, height.toDouble() - 50, 2000, Easing.CubicOut, 2000);
+            animate(::y, height.toDouble() - 50, 2000, Easing.CubicOut);
+            ::y.complete()
 
-            animate(::x, 0.0, 2000, Easing.CubicOut, 4000);
+            animate(::x, 0.0, 2000, Easing.CubicOut);
+            ::x.complete()
 
-            animate(::y, 0.0, 2000, Easing.CubicOut, 6000);
+            animate(::y, 0.0, 2000, Easing.CubicOut);
+            ::y.complete()
         }
 
         extend {
