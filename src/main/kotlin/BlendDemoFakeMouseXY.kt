@@ -47,30 +47,34 @@ fun main() = application {
         val anim = Anim()
 
 
-        extend(ScreenRecorder().apply {
-            frameRate = 60
-        })
+//        extend(ScreenRecorder().apply {
+//            frameRate = 60
+//        })
 
-
-        /**
-         * The 4 steps / directions
-         */
-        anim.apply {
-            animate(::x, width.toDouble() - 50, 2000, Easing.CubicOut);
-            ::x.complete()
-
-            animate(::y, height.toDouble() - 50, 2000, Easing.CubicOut);
-            ::y.complete()
-
-            animate(::x, 0.0, 2000, Easing.CubicOut);
-            ::x.complete()
-
-            animate(::y, 0.0, 2000, Easing.CubicOut);
-            ::y.complete()
-        }
 
         extend {
+            /**
+             * Animation
+             */
             anim.updateAnimation()
+            if (!anim.hasAnimations()) {
+                // The 4 steps/directions
+                anim.apply {
+                    ::x.animate(width.toDouble() - 50, 2000, Easing.CubicOut, 2000)
+                    ::x.complete()
+
+                    ::y.animate(height.toDouble() - 50, 2000, Easing.CubicOut);
+                    ::y.complete()
+
+                    ::x.animate(0.0, 2000, Easing.CubicOut);
+                    ::x.complete()
+
+                    ::y.animate(0.0, 2000, Easing.CubicOut);
+                    ::y.complete()
+                }
+            }
+
+
 
             val x = anim.x // simplex(0,  .95 * seconds) * .8 * width + width/2
             val y = anim.y // simplex(1000, .5*  seconds) * .8 * height + height/2
