@@ -1,29 +1,21 @@
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.renderTarget
-import org.openrndr.extra.gui.GUI
 import org.openrndr.extra.olive.oliveProgram
-import org.openrndr.extra.parameters.ColorParameter
-import org.openrndr.extra.parameters.DoubleParameter
-import org.openrndr.extra.parameters.XYParameter
 import org.openrndr.extras.imageFit.FitMethod
 import org.openrndr.extras.imageFit.imageFit
 import org.openrndr.ffmpeg.ScreenRecorder
 import org.openrndr.ffmpeg.VideoPlayerFFMPEG
-import org.openrndr.math.Vector2
-import org.openrndr.orml.u2net.U2Net
 
 
 fun main() = application {
     configure {
-        width = 1200
+        width = 800
         height = 800
     }
 
 
     program {
-        val u2 = U2Net.load()
-
         val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/wide putin.mov").apply {
             play()
             ended.listen {
@@ -31,15 +23,10 @@ fun main() = application {
             }
         }
 
-
-        val settings = object {
-            @XYParameter("position", 0.0, 1200.0, 0.0, 800.0)
-            var position: Vector2 = Vector2(0.0,800.0)
+        val target = renderTarget(400, 400) {
+            colorBuffer()
         }
 
-        val gui = GUI()
-        gui.add(settings)
-//            extend(gui)
 
         extend(ScreenRecorder())
 
@@ -51,11 +38,7 @@ fun main() = application {
             drawer.image(videoPlayer.colorBuffer!!)
 
             // Right
-            val mask = u2.removeBackground(videoPlayer.colorBuffer!!)
-            drawer.translate(settings.position)
-            drawer.scale(1.0, -1.0)
-//            drawer.rotate(180.0)
-            drawer.image(mask, 400.0, 0.0)
+            drawer.image(videoPlayer.colorBuffer!!, 400.0, 0.0)
 
         }
     }
