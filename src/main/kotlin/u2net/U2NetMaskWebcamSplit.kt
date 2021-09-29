@@ -3,68 +3,78 @@ import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.isolated
 import org.openrndr.draw.renderTarget
 import org.openrndr.extra.gui.GUI
-import org.openrndr.extra.olive.oliveProgram
-import org.openrndr.extra.parameters.ColorParameter
-import org.openrndr.extra.parameters.DoubleParameter
 import org.openrndr.extra.parameters.XYParameter
-import org.openrndr.extras.imageFit.FitMethod
 import org.openrndr.extras.imageFit.imageFit
-import org.openrndr.ffmpeg.ScreenRecorder
-import org.openrndr.ffmpeg.VideoPlayerFFMPEG
+import org.openrndr.ffmpeg.loadVideoDevice
 import org.openrndr.math.Vector2
 import org.openrndr.orml.u2net.U2Net
 
 
 fun main() = application {
     configure {
-        width = 1200
-        height = 800
+        width = 1920/2
+        height = 1080/2
     }
 
 
     program {
         val u2 = U2Net.load()
 
-        val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/wide putin.mov").apply {
+
+        val videoPlayer = loadVideoDevice().apply {
             play()
-            ended.listen {
-                restart()
-            }
         }
 
 
-        val settings = object {
-            @XYParameter("position", 0.0, 1200.0, 0.0, 800.0)
-            var position: Vector2 = Vector2(0.0,800.0)
+        // --
+        val target = renderTarget(width,height) {
+            colorBuffer()
         }
 
-        val gui = GUI()
-        gui.add(settings)
-//            extend(gui)
 
-        extend(ScreenRecorder())
+        // --
+
+
+
+        GUI().apply {
+            add(object {
+                @XYParameter("position", 0.0, 1200.0, 0.0, 800.0)
+                var position: Vector2 = Vector2(75.0,500.0)
+            })
+
+            extend(this)
+        }
+
+//        extend(ScreenRecorder())
 
         extend {
             drawer.clear(ColorRGBa.PINK)
 
-            // Left
             videoPlayer.draw(drawer, true)
-            drawer.image(videoPlayer.colorBuffer!!)
-
-            // Center
-            val mask = u2.matte(videoPlayer.colorBuffer!!)
-            drawer.isolated {
-                translate(settings.position)
-                scale(1.0, -1.0)
-                image(mask, 400.0, 0.0)
+            drawer.withTarget(target) {
+                drawer.imageFit(videoPlayer.colorBuffer!!, 0.0,0.0, width.toDouble(),height.toDouble())
             }
 
-            // Right
-            val result = u2.removeBackground(videoPlayer.colorBuffer!!)
+
+            // Left
+            drawer.imageFit(target.colorBuffer(0), 0.0,0.0, width/3.0, height.toDouble(), 0.0,0.0)
+
+
+            // Center
+            val mask = u2.matte(target.colorBuffer(0))
             drawer.isolated {
-                translate(settings.position)
-                scale(1.0, -1.0)
-                image(result, 800.0, 0.0)
+//                translate(settings.position)
+//                scale(1.0, -1.0)
+                drawer.imageFit(mask, width/3.0,0.0, width/3.0, height.toDouble(), 0.0,0.0)
+            }
+
+
+            // Right
+            val result = u2.removeBackground(target.colorBuffer(0))
+            drawer.isolated {
+//                translate(settings.position)
+//                scale(1.0, -1.0)
+                drawer.imageFit(result, width/3.0*2,0.0, width/3.0, height.toDouble(), 0.0,0.0)
             }
         }
     }
