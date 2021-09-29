@@ -1,36 +1,22 @@
-import org.openrndr.application
-import java.io.File
-
 import org.openrndr.animatable.Animatable
 import org.openrndr.animatable.easing.Easing
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.*
-import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.compositor.compose
 import org.openrndr.extra.compositor.layer
 import org.openrndr.extra.compositor.post
 import org.openrndr.extra.fx.blur.BoxBlur
-import org.openrndr.extra.fx.color.ColorCorrection
 import org.openrndr.extra.fx.patterns.Checkers
 import org.openrndr.extra.gui.GUI
-import org.openrndr.extra.noise.random
 import org.openrndr.extra.parameters.ColorParameter
 import org.openrndr.extra.parameters.DoubleParameter
-import org.openrndr.extra.timeoperators.TimeOperators
-import org.openrndr.orml.u2net.U2Net
-import org.openrndr.shape.Rectangle
 import org.openrndr.extra.timer.repeat
-import org.openrndr.extras.easing.*
 import org.openrndr.extras.imageFit.FitMethod
 import org.openrndr.extras.imageFit.imageFit
-import org.openrndr.ffmpeg.ScreenRecorder
-import java.awt.Color
-import kotlin.math.PI
-import kotlin.math.cos
-
-
-
+import org.openrndr.orml.u2net.U2Net
+import org.openrndr.shape.Rectangle
+import java.io.File
 
 
 fun main() {
@@ -45,8 +31,8 @@ fun main() {
 
     application {
         configure {
-            width = 400
-            height = 400
+            width = 800
+            height = 800
         }
 
 
@@ -158,7 +144,7 @@ fun main() {
                     drawer.image(it.resultImage, it.rect.corner)
 
 
-                    // IDEA can also use easing functions here
+                    // IDEA: can also use easing functions here
                     drawer.strokeWeight = 3.0
                     drawer.stroke = ColorRGBa.WHITE
                     if (it.anim.x < 1) {

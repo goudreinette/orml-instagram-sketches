@@ -14,6 +14,7 @@ fun main() = application {
         width = 800
         height = 800
     }
+
     oliveProgram {
         extend {
             drawer.clear(ColorRGBa.PINK)
