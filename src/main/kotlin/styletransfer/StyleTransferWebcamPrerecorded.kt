@@ -4,7 +4,9 @@ import org.openrndr.draw.loadImage
 import org.openrndr.draw.renderTarget
 import org.openrndr.extras.imageFit.FitMethod
 import org.openrndr.extras.imageFit.imageFit
+import org.openrndr.ffmpeg.ScreenRecorder
 import org.openrndr.ffmpeg.VideoPlayerFFMPEG
+import org.openrndr.ffmpeg.VideoWriter
 import org.openrndr.orml.styletransfer.StyleEncoder
 import org.openrndr.orml.styletransfer.StyleTransformer
 
@@ -15,6 +17,7 @@ fun main() = application {
         height = 800
     }
 
+
     program {
         val encoder = StyleEncoder.load()
         val transformer = StyleTransformer.load()
@@ -23,7 +26,11 @@ fun main() = application {
         val styleVector = encoder.encodeStyle(styleImage)
 
 
-        val target = renderTarget(1000, 1000) {
+        val target = renderTarget(width, height) {
+            colorBuffer()
+        }
+
+        val target2 = renderTarget(width, height) {
             colorBuffer()
         }
 
@@ -33,12 +40,17 @@ fun main() = application {
             videoPlayer.restart()
         }
 
+        val videoWriter = VideoWriter()
+        videoWriter.size(width, height)
+        videoWriter.output("video/${program.assetMetadata().assetBaseName}.mp4")
+        videoWriter.start()
 
-
-//        extend(ScreenRecorder())
-
+        ended.listen {
+            videoWriter.stop()
+        }
 
         extend {
+
             drawer.clear(ColorRGBa.BLACK)
 
             drawer.withTarget(target) {
@@ -48,6 +60,14 @@ fun main() = application {
             val transformed = transformer.transformStyle(target.colorBuffer(0), styleVector)
 
             drawer.imageFit(transformed, 0.0,0.0, width.toDouble(), height.toDouble(), 0.0,0.0, FitMethod.Contain)
+
+            drawer.withTarget(target2) {
+                imageFit(transformed, 0.0,0.0, width.toDouble(), height.toDouble(), 0.0,0.0, FitMethod.Contain)
+            }
+
+            videoWriter.frame(target2.colorBuffer(0))
         }
+
+
     }
 }

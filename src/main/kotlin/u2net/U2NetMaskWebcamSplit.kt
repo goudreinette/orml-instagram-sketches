@@ -5,6 +5,7 @@ import org.openrndr.draw.renderTarget
 import org.openrndr.extra.gui.GUI
 import org.openrndr.extra.parameters.XYParameter
 import org.openrndr.extras.imageFit.imageFit
+import org.openrndr.ffmpeg.ScreenRecorder
 import org.openrndr.ffmpeg.loadVideoDevice
 import org.openrndr.math.Vector2
 import org.openrndr.orml.u2net.U2Net
@@ -31,7 +32,7 @@ fun main() = application {
         }
 
 
-//        extend(ScreenRecorder())
+        extend(ScreenRecorder())
 
         extend {
             drawer.clear(ColorRGBa.PINK)
