@@ -5,7 +5,7 @@ import org.openrndr.ffmpeg.VideoPlayerFFMPEG
 
 fun main() = application {
     program {
-        val videoPlayer = VideoPlayerFFMPEG.fromDevice()
+        val videoPlayer = VideoPlayerFFMPEG.fromDevice("3")
 
         print(VideoPlayerFFMPEG.defaultDevice())
         print(VideoPlayerFFMPEG.listDeviceNames())
