@@ -20,7 +20,6 @@ fun main() = application {
     program {
         val u2 = U2Net.load()
 
-
         val videoPlayer = loadVideoDevice().apply {
             play()
         }
@@ -32,19 +31,6 @@ fun main() = application {
         }
 
 
-        // --
-
-
-
-        GUI().apply {
-            add(object {
-                @XYParameter("position", 0.0, 1200.0, 0.0, 800.0)
-                var position: Vector2 = Vector2(75.0,500.0)
-            })
-
-            extend(this)
-        }
-
 //        extend(ScreenRecorder())
 
         extend {
@@ -52,7 +38,7 @@ fun main() = application {
 
             videoPlayer.draw(drawer, true)
             drawer.withTarget(target) {
-                drawer.imageFit(videoPlayer.colorBuffer!!, 0.0,0.0, width.toDouble(),height.toDouble())
+                imageFit(videoPlayer.colorBuffer!!, 0.0,0.0, width.toDouble(),height.toDouble())
             }
 
 
@@ -62,20 +48,12 @@ fun main() = application {
 
             // Center
             val mask = u2.matte(target.colorBuffer(0))
-            drawer.isolated {
-//                translate(settings.position)
-//                scale(1.0, -1.0)
-                drawer.imageFit(mask, width/3.0,0.0, width/3.0, height.toDouble(), 0.0,0.0)
-            }
+            drawer.imageFit(mask, width/3.0,0.0, width/3.0, height.toDouble(), 0.0,0.0)
 
 
             // Right
             val result = u2.removeBackground(target.colorBuffer(0))
-            drawer.isolated {
-//                translate(settings.position)
-//                scale(1.0, -1.0)
-                drawer.imageFit(result, width/3.0*2,0.0, width/3.0, height.toDouble(), 0.0,0.0)
-            }
+            drawer.imageFit(result, width/3.0*2,0.0, width/3.0, height.toDouble(), 0.0,0.0)
         }
     }
 }
