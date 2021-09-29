@@ -1,5 +1,6 @@
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
+import org.openrndr.draw.isolated
 import org.openrndr.draw.renderTarget
 import org.openrndr.extra.gui.GUI
 import org.openrndr.extra.olive.oliveProgram
@@ -50,13 +51,21 @@ fun main() = application {
             videoPlayer.draw(drawer, true)
             drawer.image(videoPlayer.colorBuffer!!)
 
-            // Right
-            val mask = u2.removeBackground(videoPlayer.colorBuffer!!)
-            drawer.translate(settings.position)
-            drawer.scale(1.0, -1.0)
-//            drawer.rotate(180.0)
-            drawer.image(mask, 400.0, 0.0)
+            // Center
+            val mask = u2.matte(videoPlayer.colorBuffer!!)
+            drawer.isolated {
+                translate(settings.position)
+                scale(1.0, -1.0)
+                image(mask, 400.0, 0.0)
+            }
 
+            // Right
+            val result = u2.removeBackground(videoPlayer.colorBuffer!!)
+            drawer.isolated {
+                translate(settings.position)
+                scale(1.0, -1.0)
+                image(result, 800.0, 0.0)
+            }
         }
     }
 }
