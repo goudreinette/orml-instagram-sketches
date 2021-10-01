@@ -4,9 +4,7 @@ import org.openrndr.draw.loadImage
 import org.openrndr.draw.renderTarget
 import org.openrndr.extras.imageFit.FitMethod
 import org.openrndr.extras.imageFit.imageFit
-import org.openrndr.ffmpeg.ScreenRecorder
-import org.openrndr.ffmpeg.VideoPlayerFFMPEG
-import org.openrndr.ffmpeg.VideoWriter
+import org.openrndr.ffmpeg.*
 import org.openrndr.orml.styletransfer.StyleEncoder
 import org.openrndr.orml.styletransfer.StyleTransformer
 
@@ -30,42 +28,35 @@ fun main() = application {
             colorBuffer()
         }
 
-        val target2 = renderTarget(width, height) {
-            colorBuffer()
+        val conf = VideoPlayerConfiguration().apply {
+            allowFrameSkipping = false
         }
 
-        val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/webcam.mp4")
-        videoPlayer.play()
-        videoPlayer.ended.listen {
-            videoPlayer.restart()
+        val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/webcam.mp4", PlayMode.BOTH, conf).apply {
+            play()
+            ended.listen {
+                restart()
+            }
         }
 
-        val videoWriter = VideoWriter()
-        videoWriter.size(width, height)
-        videoWriter.output("video/${program.assetMetadata().assetBaseName}.mp4")
-        videoWriter.start()
 
-        ended.listen {
-            videoWriter.stop()
-        }
+        extend(ScreenRecorder())
+
 
         extend {
 
             drawer.clear(ColorRGBa.BLACK)
 
+            videoPlayer.draw(drawer, true)
             drawer.withTarget(target) {
-                videoPlayer.draw(drawer)
+                imageFit(videoPlayer.colorBuffer!!, 0.0,0.0, width.toDouble(),height.toDouble())
             }
 
             val transformed = transformer.transformStyle(target.colorBuffer(0), styleVector)
 
-            drawer.imageFit(transformed, 0.0,0.0, width.toDouble(), height.toDouble(), 0.0,0.0, FitMethod.Contain)
+            drawer.imageFit(transformed, 0.0,0.0, width.toDouble(), height.toDouble(), -width/2.0,0.0, FitMethod.Contain)
 
-            drawer.withTarget(target2) {
-                imageFit(transformed, 0.0,0.0, width.toDouble(), height.toDouble(), 0.0,0.0, FitMethod.Contain)
-            }
 
-            videoWriter.frame(target2.colorBuffer(0))
         }
 
 
