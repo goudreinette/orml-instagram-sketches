@@ -5,9 +5,7 @@ import org.openrndr.draw.renderTarget
 import org.openrndr.extra.gui.GUI
 import org.openrndr.extra.parameters.XYParameter
 import org.openrndr.extras.imageFit.imageFit
-import org.openrndr.ffmpeg.ScreenRecorder
-import org.openrndr.ffmpeg.VideoPlayerFFMPEG
-import org.openrndr.ffmpeg.loadVideoDevice
+import org.openrndr.ffmpeg.*
 import org.openrndr.math.Vector2
 import org.openrndr.orml.u2net.U2Net
 
@@ -22,7 +20,10 @@ fun main() = application {
     program {
         val u2 = U2Net.load()
 
-        val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/webcam.mp4").apply {
+        val conf = VideoPlayerConfiguration().apply {
+            allowFrameSkipping = false
+        }
+        val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/wide putin.mov", PlayMode.BOTH, conf).apply {
             play()
             ended.listen {
                 restart()
