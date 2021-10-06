@@ -88,7 +88,7 @@ val ormlUseSnapshot = true
 val ormlVersion = if (ormlUseSnapshot) "0.5.1-SNAPSHOT" else "0.3.0-rc.5"
 
 // choices are "orx-tensorflow-gpu", "orx-tensorflow-mkl", "orx-tensorflow"
-val orxTensorflowBackend = "orx-tensorflow"
+val orxTensorflowBackend = "orx-tensorflow-gpu"
 
 //<editor-fold desc="This is code for OPENRNDR, no need to edit this .. most of the times">
 val supportedPlatforms = setOf("windows", "macos", "linux-x64", "linux-arm64")

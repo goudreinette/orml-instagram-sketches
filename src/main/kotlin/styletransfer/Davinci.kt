@@ -1,3 +1,4 @@
+import org.openrndr.Fullscreen
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.loadImage
@@ -13,6 +14,8 @@ fun main() = application {
     configure {
         width = 1000
         height = 1000
+        //fullscreen = Fullscreen.SET_DISPLAY_MODE
+//        hideWindowDecorations = true
     }
 
 
@@ -20,7 +23,7 @@ fun main() = application {
         val encoder = StyleEncoder.load()
         val transformer = StyleTransformer.load()
 
-        val styleImage = loadImage("data/images/sand-texture-2-50x70_2.jpg")
+        val styleImage = loadImage("data/images/davinci-style.jpg")
         val styleVector = encoder.encodeStyle(styleImage)
 
 
@@ -32,6 +35,8 @@ fun main() = application {
             allowFrameSkipping = false
         }
 
+
+
         val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/davinci-video.mov", PlayMode.BOTH, conf).apply {
             play()
             ended.listen {
@@ -40,9 +45,8 @@ fun main() = application {
         }
 
 
+
         extend(ScreenRecorder())
-
-
 
         extend {
 
