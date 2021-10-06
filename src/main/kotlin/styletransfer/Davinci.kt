@@ -11,8 +11,8 @@ import org.openrndr.orml.styletransfer.StyleTransformer
 
 fun main() = application {
     configure {
-        width = 800
-        height = 800
+        width = 1000
+        height = 1000
     }
 
 
@@ -20,7 +20,7 @@ fun main() = application {
         val encoder = StyleEncoder.load()
         val transformer = StyleTransformer.load()
 
-        val styleImage = loadImage("data/images/pinkpanther.jpg")
+        val styleImage = loadImage("data/images/sand-texture-2-50x70_2.jpg")
         val styleVector = encoder.encodeStyle(styleImage)
 
 
@@ -32,7 +32,7 @@ fun main() = application {
             allowFrameSkipping = false
         }
 
-        val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/webcam.mp4", PlayMode.BOTH, conf).apply {
+        val videoPlayer = VideoPlayerFFMPEG.fromFile("data/videos/davinci-video.mov", PlayMode.BOTH, conf).apply {
             play()
             ended.listen {
                 restart()
