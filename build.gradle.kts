@@ -68,7 +68,8 @@ val ormlFeatures = setOf<String>(
 //    "orml-ssd",
     "orml-style-transfer",
 //    "orml-super-resolution",
-    "orml-u2net"
+    "orml-u2net",
+    "orml-bodypix"
 )
 
 
