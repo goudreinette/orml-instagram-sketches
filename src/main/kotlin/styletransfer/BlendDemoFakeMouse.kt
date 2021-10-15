@@ -5,7 +5,6 @@ import org.openrndr.extras.imageFit.imageFit
 import org.openrndr.ffmpeg.ScreenRecorder
 import org.openrndr.orml.styletransfer.StyleEncoder
 import org.openrndr.orml.styletransfer.StyleTransformer
-import kotlin.math.sin
 
 
 fun main() = application {

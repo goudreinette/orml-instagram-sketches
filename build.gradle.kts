@@ -60,14 +60,14 @@ val orxFeatures = setOf(
 ).filterNotNull()
 
 val ormlFeatures = setOf<String>(
-//    "orml-blazepose",
-//    "orml-dbface",
-//    "orml-facemesh",
-//    "orml-image-classifier",
-//    "orml-psenet",
-//    "orml-ssd",
+    "orml-blazepose",
+    "orml-dbface",
+    "orml-facemesh",
+    "orml-image-classifier",
+    "orml-psenet",
+    "orml-ssd",
     "orml-style-transfer",
-//    "orml-super-resolution",
+    "orml-super-resolution",
     "orml-u2net",
     "orml-bodypix"
 )
