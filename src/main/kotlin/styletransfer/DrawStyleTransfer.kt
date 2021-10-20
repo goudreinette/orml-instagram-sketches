@@ -103,15 +103,14 @@ fun main() = application {
         val radius = 10.0
 
         extend {
-            val x = map(canvasRect.x..(canvasRect.x+canvasRect.width), 0.0..width.toDouble(), mouse.position.x)
-            val y = map(canvasRect.y..(canvasRect.y+canvasRect.height), 0.0..height.toDouble(), mouse.position.y)
+            val coord = map(canvasRect, drawer.bounds, mouse.position)
 
             drawer.withTarget(target) {
                 if (mouse.pressedButtons.contains(MouseButton.LEFT)) {
                     drawer.apply {
                         fill = settings.color
                         stroke = ColorRGBa.TRANSPARENT
-                        circle(Vector2(x, y), settings.brushSize)
+                        circle(coord, settings.brushSize)
                     }
                 }
             }
@@ -123,18 +122,6 @@ fun main() = application {
 
 
             drawer.image(result, guiOffset, 256.0)
-//            val x = simplex(0,  .95 * seconds) * .8 * width + width/2
-//            val y = simplex(1000, .1*  seconds) * .005 * height + height/2
-//
-//            val f = (x/width).toFloat()
-//
-//            val transformed = transformer.transformStyle(contentImage, styleVector)
-//
-//
-//            drawer.image(transformed)
-//
-//
-//            drawer.imageFit(cursor, x, y, 20.0, 20.0)
         }
     }
 }
@@ -156,3 +143,8 @@ fun Vector2.isInside(rect: Rectangle): Boolean {
     return this.x > rect.x && this.x < rect.x + rect.width
             && this.y > rect.y && this.y < rect.y + rect.height
 }
+
+fun map(a: Rectangle, b: Rectangle, point: Vector2): Vector2 =
+    Vector2(
+        map(a.x..(a.x+a.width), b.x..b.width, point.x),
+        map(a.y..(a.y+a.height), b.x..b.height, point.y))
